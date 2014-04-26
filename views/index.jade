@@ -1,5 +1,16 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  .container
+    .jumbotron.text-center
+      h1
+        span.fa.fa-lock
+        | Node Authentication
+      p
+        Login or Register with:
+      a.btn.btn-default.marg_right_5px( href="/login" )
+        span.fa.fa-user
+        | Local Login
+      a.btn.btn-default.marg_left_5px( href="/signup" )
+        span.fa.fa-user
+          Local Signup
