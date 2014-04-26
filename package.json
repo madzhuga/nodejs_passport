@@ -22,5 +22,10 @@
         "connect-flash": "latest",
         "bcrypt-nodejs": "latest",
         "express-session": "latest"
+    },
+    "devDependencies": {
+        "mocha" : "latest",
+        "supertest" : "latest",
+        "expect.js" : "latest"
     }
 }

@@ -62,6 +62,7 @@ module.exports = function (passport) {
             passwordField: 'password',
             passReqToCallback: true
         }, function (req, email, password, done) {
+            //todo move to UserService so that we can split stub data for tests.
             User.findOne({'local.email' : email}, function (err, user) {
                 if (err) {
                     return done(err);
