@@ -26,6 +26,6 @@
     "devDependencies": {
         "mocha" : "latest",
         "supertest" : "latest",
-        "expect.js" : "latest"
+        "should" : "latest"
     }
 }

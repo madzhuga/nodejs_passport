@@ -10,10 +10,6 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
-var mongoose = require('mongoose');
-var configDb = require('./config/database.js');
-mongoose.connect(configDb.url);
-
 var passport = require('passport');
 var flash = require('connect-flash');
 
