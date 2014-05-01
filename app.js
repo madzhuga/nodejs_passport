@@ -1,40 +1,45 @@
 /*global require, __dirname, module */
 
-var express = require('express');
-var path = require('path');
-var favicon = require('static-favicon');
-var logger = require('morgan');
-var session = require('express-session');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
+var express = require('express'),
+    path = require('path'),
+    favicon = require('static-favicon'),
+    logger = require('morgan'),
+    session = require('express-session'),
+    cookieParser = require('cookie-parser'),
+    bodyParser = require('body-parser'),
+    csrf = require('csurf');
 
 var app = express();
 
-var passport = require('passport');
-var flash = require('connect-flash');
+var passport = require('passport'),
+    flash = require('connect-flash');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(favicon());
+app.use(favicon(__dirname + '/public/images/note.ico'));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
+app.use(session({ secret: 'mudotaseventine'}));
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(session( {secret: 'onesmallsecret'} ));
+app.use(csrf());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
 require('./config/passport')(passport);
 
+app.use(function(req, res, next){
+    "use strict";
+    res.locals.token = req.csrfToken();
+    next();
+});
 
 
 //todo check if possible to reuse routes or split routes.js to more generic routes
-//app.use('/', routes);
-//app.use('/users', users);
 require('./routes/routes.js')(app, passport);
 
 /// catch 404 and forwarding to error handler

@@ -12,6 +12,7 @@ block content
           = message
 
       form( action="/login" method="post" )
+        input( type="hidden", name="_csrf" value=token)
         .form-group
           label Email
           input( type="text" class="form-control" name="email" )

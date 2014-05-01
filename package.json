@@ -21,7 +21,8 @@
         "passport-google-oauth": "latest",
         "connect-flash": "latest",
         "bcrypt-nodejs": "latest",
-        "express-session": "latest"
+        "express-session": "latest",
+        "csurf": "latest"
     },
     "devDependencies": {
         "mocha" : "latest",
