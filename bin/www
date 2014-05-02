@@ -4,8 +4,8 @@ var app = require('../app');
 
 app.set('port', process.env.PORT || 3000);
 var mongoose = require('mongoose');
-//var configDb = require('../config/database.js');
-//mongoose.connect(configDb.url);
+var configDb = require('../config/database.js');
+mongoose.connect(configDb.url);
 
 
 var server = app.listen(app.get('port'), function() {
