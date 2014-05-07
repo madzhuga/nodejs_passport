@@ -8,26 +8,23 @@ module.exports = function (app, passport) {
         res.render('index');
     });
 
-    //login
-    app.get('/login', function (req, res) {
-        //todo refactor, may be change to middleware
+    function joinFlashMessages(req) {
         var flash = req.flash();
+        var message_types = ['signupMessage', 'loginMessage', 'error'];
         var messages = [];
 
-        if (typeof flash.signupMessage !== 'undefined') {
-            messages.push(flash.signupMessage[0]);
+        for (var i = 0; i < message_types.length; i ++ ) {
+            if (typeof flash[message_types[i]] !== 'undefined') {
+                messages.push(flash[message_types[i]]);
+            }
         }
 
+        return messages.join(', ');
+    }
 
-        if (typeof flash.loginMessage !== 'undefined') {
-            messages.push(flash.loginMessage);
-        }
-
-        if (typeof flash.error !== 'undefined') {
-            messages.push(flash.error);
-        }
-
-        res.render('login', { message: messages.join(', ') });
+    //login
+    app.get('/login', function (req, res) {
+        res.render('login', { message: joinFlashMessages(req) });
     });
     app.post('/login', passport.authenticate('local-login', {
         successRedirect : '/profile',
@@ -38,24 +35,7 @@ module.exports = function (app, passport) {
 
     //signup
     app.get('/signup', function (req, res) {
-
-        //todo refactor, may be change to middleware
-        var flash = req.flash();
-        var messages = [];
-
-        if (typeof flash.signupMessage !== 'undefined') {
-            messages.push(flash.signupMessage[0]);
-        }
-
-        if (typeof flash.loginMessage !== 'undefined') {
-            messages.push(flash.loginMessage);
-        }
-
-        if (typeof flash.error !== 'undefined') {
-            messages.push(flash.error);
-        }
-
-        res.render('signup', { message: messages.join(', ') });
+        res.render('signup', { message: joinFlashMessages(req) });
     });
 
     app.post('/signup', passport.authenticate('local-signup', {
