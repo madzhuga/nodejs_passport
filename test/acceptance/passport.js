@@ -141,16 +141,6 @@ describe('Login Scenario', function() {
     var email = 'another@zomb.ie',
         password = 'password';
 
-//    before(function(done) {
-//        var newUser = new User();
-//        newUser.local.email = email;
-//        newUser.local.password = newUser.generateHash(password);
-//
-//        newUser.save(function (err) {
-//            done(err);
-//        });
-//    });
-
     it('should show bad credentials when no login', function(done) {
         var browser = new Browser();
         browser.visit(rootUrl + '/login', function () {
@@ -178,16 +168,17 @@ describe('Login Scenario', function() {
         });
     });
 
-    it('should allow to login / logout', function (done){
+    describe('existing user', function (){
 
-        var newUser = new User();
-        newUser.local.email = email;
-        newUser.local.password = newUser.generateHash(password);
+        beforeEach(function(done) {
+            var newUser = new User();
+            newUser.local.email = email;
+            newUser.local.password = newUser.generateHash(password);
+            newUser.save(done);
 
-        newUser.save(function (err) {
-            if (err) {
-                throw err;
-            }
+        });
+
+        it('able to login / logout', function (done){
 
             var browser = new Browser();
             browser.visit(rootUrl, function(){
@@ -205,26 +196,17 @@ describe('Login Scenario', function() {
 
                             browser.
                                 clickLink('Logout', function(){
-                                browser.location.pathname.should.eql('/');
-                                done();
-                            });
+                                    browser.location.pathname.should.eql('/');
+                                    done();
+                                });
                         });
                 });
             });
+
+
         });
 
-    });
-
-    it('should fail with wrong password', function (done){
-
-        var newUser = new User();
-        newUser.local.email = email;
-        newUser.local.password = newUser.generateHash(password);
-
-        newUser.save(function (err) {
-            if (err) {
-                throw err;
-            }
+        it('login fail with wrong password', function (done){
 
             var browser = new Browser();
             browser.visit(rootUrl, function(){
@@ -243,28 +225,29 @@ describe('Login Scenario', function() {
                         });
                 });
             });
+
         });
 
-    });
+        it('login fail with wrong email', function (done) {
 
-    it('should fail with wrong email', function (done) {
+            var browser = new Browser();
+            browser.visit(rootUrl, function () {
+                browser.success.should.be.true;
+                browser.clickLink('Local Login', function () {
+                    browser.text('h1').should.eql('Login');
 
-        var browser = new Browser();
-        browser.visit(rootUrl, function () {
-            browser.success.should.be.true;
-            browser.clickLink('Local Login', function () {
-                browser.text('h1').should.eql('Login');
+                    browser.
+                        fill('email', email + '_wrong').
+                        fill('password', password + '_wrong').
+                        pressButton('Login', function () {
+                            browser.location.pathname.should.eql('/login');
+                            browser.text('No user with this email found').should.exist;
 
-                browser.
-                    fill('email', email + '_wrong').
-                    fill('password', password + '_wrong').
-                    pressButton('Login', function () {
-                        browser.location.pathname.should.eql('/login');
-                        browser.text('No user with this email found').should.exist;
-
-                        done();
-                    });
+                            done();
+                        });
+                });
             });
+
         });
 
     });
