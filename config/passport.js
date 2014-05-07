@@ -1,4 +1,4 @@
-/* global require, module, process */
+/* global require, module, process  */
 
 var LocalStrategy = require('passport-local').Strategy;
 var User = require('../app/models/user');
