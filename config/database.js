@@ -1,4 +1,10 @@
 /*global module */
 module.exports = {
-    'url' : 'mongodb://maxim:o5o21984@ds037478.mongolab.com:37478/tumba'
+    'url' :
+        'mongodb://' +
+            process.env.ML_USER + ':' +
+            process.env.ML_PASSWORD +
+            '@' +
+            process.env.ML_DB +
+            '/tumba'
 };
