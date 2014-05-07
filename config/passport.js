@@ -22,6 +22,9 @@ module.exports = function (passport) {
             passwordField: 'password',
             passReqToCallback: true
         }, function (req, email, password, done) {
+
+            // asynchronous
+            // User.findOne wont fire unless data is sent back
             process.nextTick(function () {
                 User.findOne({'local.email': email }, function (err, user) {
                     if (err) {
@@ -38,6 +41,7 @@ module.exports = function (passport) {
                             )
                         );
                     } else {
+                        //todo refactor
                         var newUser = new User();
                         newUser.local.email = email;
                         newUser.local.password = newUser.generateHash(password);

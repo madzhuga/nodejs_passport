@@ -10,18 +10,52 @@ module.exports = function (app, passport) {
 
     //login
     app.get('/login', function (req, res) {
-        res.render('login', { message: req.flash('loginMessage') });
+        //todo refactor, may be change to middleware
+        var flash = req.flash();
+        var messages = [];
+
+        if (typeof flash.signupMessage !== 'undefined') {
+            messages.push(flash.signupMessage[0]);
+        }
+
+
+        if (typeof flash.loginMessage !== 'undefined') {
+            messages.push(flash.loginMessage);
+        }
+
+        if (typeof flash.error !== 'undefined') {
+            messages.push(flash.error);
+        }
+
+        res.render('login', { message: messages.join(', ') });
     });
     app.post('/login', passport.authenticate('local-login', {
         successRedirect : '/profile',
-        failureRedirect : '/signup',
+        failureRedirect : '/login',
         failureFlash : true
     }));
 
 
     //signup
     app.get('/signup', function (req, res) {
-        res.render('signup', { message: req.flash('signupMessage') });
+
+        //todo refactor, may be change to middleware
+        var flash = req.flash();
+        var messages = [];
+
+        if (typeof flash.signupMessage !== 'undefined') {
+            messages.push(flash.signupMessage[0]);
+        }
+
+        if (typeof flash.loginMessage !== 'undefined') {
+            messages.push(flash.loginMessage);
+        }
+
+        if (typeof flash.error !== 'undefined') {
+            messages.push(flash.error);
+        }
+
+        res.render('signup', { message: messages.join(', ') });
     });
 
     app.post('/signup', passport.authenticate('local-signup', {

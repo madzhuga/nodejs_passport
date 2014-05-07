@@ -1,6 +1,7 @@
+/*todo: replaced by acceptance/passport.js, rework and may be delete */
 /*global require, describe, it */
 
-//todo create test helper gathering all test config info
+//todo create start helper gathering all start config info
 var app         = require('../app.js'),
     should      = require('should'),
     supertest   = require('supertest'),
@@ -34,11 +35,20 @@ describe('Home page', function () {
         supertest(app).
             get('/').
             end( function (err, res){
-                var re = /<a href="\/login".*>Local Login<\/a>/;
+                var re = /<a href="\/login".*Local Login<\/a>/;
+                res.text.search(re).should.not.equal(-1, "Not found");
                 done();
             });
     });
-    it ('should have Signup button');
+    it ('should have Signup button', function (done) {
+        supertest(app).
+            get('/').
+            end( function (err, res) {
+                var re = /<a href="\/signup".*Signup<\/a>/;
+                res.text.search(re).should.not.equal(-1, "Not found");
+                done();
+            });
+    });
 
 });
 

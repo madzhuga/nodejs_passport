@@ -25,10 +25,10 @@ app.use(bodyParser.urlencoded());
 app.use(cookieParser());
 app.use(session({ secret: 'mudotaseventine'}));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(flash());
 app.use(csrf());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 require('./config/passport')(passport);
 
