@@ -1,4 +1,5 @@
-/*global module */
+/* global module, process */
+
 module.exports = {
     'url' :
         'mongodb://' +

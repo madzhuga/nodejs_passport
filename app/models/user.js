@@ -1,4 +1,4 @@
-/*global require */
+/*global require, module */
 
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
