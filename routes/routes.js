@@ -8,20 +8,6 @@ module.exports = function (app, passport) {
         res.render('index');
     });
 
-    function joinFlashMessages(req) {
-        var flash = req.flash();
-        var message_types = ['signupMessage', 'loginMessage', 'error'];
-        var messages = [];
-
-        for (var i = 0; i < message_types.length; i ++ ) {
-            if (typeof flash[message_types[i]] !== 'undefined') {
-                messages.push(flash[message_types[i]]);
-            }
-        }
-
-        return messages.join(', ');
-    }
-
     //login
     app.get('/login', function (req, res) {
         res.render('login', { message: joinFlashMessages(req) });
@@ -64,4 +50,18 @@ function isLoggedIn(req, res, next) {
     }
 
     res.redirect('/');
+}
+
+function joinFlashMessages(req) {
+    var flash = req.flash();
+    var message_types = ['signupMessage', 'loginMessage', 'error'];
+    var messages = [];
+
+    for (var i = 0; i < message_types.length; i ++ ) {
+        if (typeof flash[message_types[i]] !== 'undefined') {
+            messages.push(flash[message_types[i]]);
+        }
+    }
+
+    return messages.join(', ');
 }
