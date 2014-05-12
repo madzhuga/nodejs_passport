@@ -1,4 +1,6 @@
-/*global module, app */
+/*global module, app, require */
+
+var Todo = require('../app/models/todo');
 
 module.exports = function (app, passport) {
     "use strict";
@@ -8,19 +10,54 @@ module.exports = function (app, passport) {
         res.render('index');
     });
 
-    function joinFlashMessages(req) {
-        var flash = req.flash();
-        var message_types = ['signupMessage', 'loginMessage', 'error'];
-        var messages = [];
+    app.get('/api/todos', function (req, res) {
 
-        for (var i = 0; i < message_types.length; i ++ ) {
-            if (typeof flash[message_types[i]] !== 'undefined') {
-                messages.push(flash[message_types[i]]);
+        Todo.find(function (err, todos) {
+            if (err) {
+                res.send(err);
             }
-        }
 
-        return messages.join(', ');
-    }
+            res.json(todos);
+        });
+    });
+
+    app.post('/api/todos', function(req, res) {
+        Todo.create({
+            text : req.body.text,
+            done : false
+        }, function (err, todo) {
+            if (err) {
+                res.send(err);
+            }
+
+            Todo.find(function(err, todos) {
+                if (err) {
+                    res.send(err);
+                }
+
+                res.json(todos);
+            });
+        });
+    });
+
+    app.delete('/api/todos/:todo_id', function (req, res) {
+        Todo.remove({
+            _id: req.params.todo_id
+        }, function( err, todo) {
+            if (err) {
+                res.send(err);
+            }
+
+            Todo.find( function (err, todos) {
+                if (err) {
+                    res.send(err);
+                }
+
+                res.json(todos);
+            });
+        });
+    });
+
 
     //login
     app.get('/login', function (req, res) {
@@ -32,12 +69,10 @@ module.exports = function (app, passport) {
         failureFlash : true
     }));
 
-
     //signup
     app.get('/signup', function (req, res) {
         res.render('signup', { message: joinFlashMessages(req) });
     });
-
     app.post('/signup', passport.authenticate('local-signup', {
         successRedirect : '/profile',
         failureRedirect : '/signup',
@@ -49,7 +84,6 @@ module.exports = function (app, passport) {
     app.get('/profile', isLoggedIn, function (req, res) {
         res.render('profile', {user: req.user});
     });
-
     app.get('/logout', function (req, res) {
         req.logout();
         res.redirect('/');
@@ -64,4 +98,20 @@ function isLoggedIn(req, res, next) {
     }
 
     res.redirect('/');
+}
+
+function joinFlashMessages(req) {
+    "use strict";
+
+    var flash = req.flash();
+    var message_types = ['signupMessage', 'loginMessage', 'error'];
+    var messages = [];
+
+    for (var i = 0; i < message_types.length; i ++ ) {
+        if (typeof flash[message_types[i]] !== 'undefined') {
+            messages.push(flash[message_types[i]]);
+        }
+    }
+
+    return messages.join(', ');
 }
